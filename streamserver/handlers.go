@@ -14,7 +14,7 @@ func streamHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 	vid := p.ByName("vid-id")
 	vl := VIDEO_DIR + vid // file name
 
-	log.Printf("%s", vl)
+	log.Printf("%scripts", vl)
 	// open the video
 	video, err := os.Open(vl)
 	if err != nil {
