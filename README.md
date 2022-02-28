@@ -1,11 +1,9 @@
 ![](https://github.com/acse-sm321/MoStream/actions/workflows/check.yml/badge.svg)
 # MoStream
-A video stream website written by Go.   
-
-It is my personal website and I will upload some fun contents. If you have any awesome idea contact me with shuheng_mo_mail@163.com.
+A video stream website written by Go. View the videos and comment your idea right now!
 
 ## Access the website
-[MoStream](https://pornhub.com)
+[MoStream](https://mostream.com)
 - website address: https://www.
 
 ## Updates & Troubleshooting
