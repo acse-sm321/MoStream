@@ -8,6 +8,9 @@ import (
 
 // user authentication
 
+// IAM could be used in the future
+// SSO and Rbac
+
 // use customized http headers
 var HEADER_FIELD_SESSION = "X-Session-Id"
 var HEADER_FIELD_UNAME = "X-User-Name"

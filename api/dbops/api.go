@@ -14,51 +14,80 @@ import (
 
 // AddUserCredential Add new user credential to database
 func AddUserCredential(loginName string, pwd string) error {
-	stmIns, err := dbConn.Prepare("INSERT INTO users (login_name,pwd) VALUES  (?,?)")
+	stmtIns, err := dbConn.Prepare("INSERT INTO users (login_name, pwd) VALUES (?, ?)")
 	if err != nil {
 		return err
 	}
-	_, err = stmIns.Exec(loginName, pwd)
+
+	_, err = stmtIns.Exec(loginName, pwd)
 	if err != nil {
 		return err
 	}
-	defer stmIns.Close()
+
+	defer stmtIns.Close()
 	return nil
 }
 
-// GetUserCredential Get the password of user by its username
 func GetUserCredential(loginName string) (string, error) {
-	stmOut, err := dbConn.Prepare("SELECT pwd FROM users WHERE login_name = ?")
+	stmtOut, err := dbConn.Prepare("SELECT pwd FROM users WHERE login_name = ?")
 	if err != nil {
-		log.Printf("%scripts", err)
+		log.Printf("%s", err)
 		return "", err
 	}
+
 	var pwd string
-	err = stmOut.QueryRow(loginName).Scan(&pwd)
+	err = stmtOut.QueryRow(loginName).Scan(&pwd)
 	if err != nil && err != sql.ErrNoRows {
 		return "", err
 	}
-	defer stmOut.Close()
+
+	defer stmtOut.Close()
 
 	return pwd, nil
 }
 
-// DeleteUser Delete a user by its username and password
 func DeleteUser(loginName string, pwd string) error {
-	stmDel, err := dbConn.Prepare("DELETE  FROM  users WHERE login_name=? AND pwd=? ")
+	stmtDel, err := dbConn.Prepare("DELETE FROM users WHERE login_name=? AND pwd=?")
 	if err != nil {
-		log.Printf("%scripts", err)
+		log.Printf("DeleteUser error: %s", err)
 		return err
 	}
-	_, err = stmDel.Exec(loginName, pwd)
+
+	_, err = stmtDel.Exec(loginName, pwd)
 	if err != nil {
 		return err
 	}
-	stmDel.Close()
+
+	defer stmtDel.Close()
 	return nil
 }
 
-// AddNewVideo Add new video data to database
+func GetUser(loginName string) (*defs.User, error) {
+	stmtOut, err := dbConn.Prepare("SELECT id, pwd FROM users WHERE login_name = ?")
+	if err != nil {
+		log.Printf("%s", err)
+		return nil, err
+	}
+
+	var id int
+	var pwd string
+
+	err = stmtOut.QueryRow(loginName).Scan(&id, &pwd)
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	res := &defs.User{Id: id, LoginName: loginName, Pwd: pwd}
+
+	defer stmtOut.Close()
+
+	return res, nil
+}
+
 func AddNewVideo(aid int, name string) (*defs.VideoInfo, error) {
 	// create uuid
 	vid, err := utils.NewUUID()
@@ -67,20 +96,21 @@ func AddNewVideo(aid int, name string) (*defs.VideoInfo, error) {
 	}
 
 	t := time.Now()
-	ctime := t.Format("Jan 02 2006, 15:04:05") // MM DD YY, hh:mm:ss
-	stmIns, err := dbConn.Prepare("INSERT INTO video_info (id,author_id,name,display_ctime) VALUES(?,?,?,?)")
+	ctime := t.Format("Jan 02 2006, 15:04:05")
+	stmtIns, err := dbConn.Prepare(`INSERT INTO video_info 
+		(id, author_id, name, display_ctime) VALUES(?, ?, ?, ?)`)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = stmIns.Exec(vid, aid, name, ctime)
+	_, err = stmtIns.Exec(vid, aid, name, ctime)
 	if err != nil {
 		return nil, err
 	}
 
 	res := &defs.VideoInfo{Id: vid, AuthorId: aid, Name: name, DisplayCtime: ctime}
-	defer stmIns.Close()
 
+	defer stmtIns.Close()
 	return res, nil
 }
 
@@ -103,6 +133,40 @@ func GetVideoInfo(vid string) (*defs.VideoInfo, error) {
 	defer stmtOut.Close()
 
 	res := &defs.VideoInfo{Id: vid, AuthorId: aid, Name: name, DisplayCtime: dct}
+
+	return res, nil
+}
+
+func ListVideoInfo(uname string, from, to int) ([]*defs.VideoInfo, error) {
+	stmtOut, err := dbConn.Prepare(`SELECT video_info.id, video_info.author_id, video_info.name, video_info.display_ctime FROM video_info 
+		INNER JOIN users ON video_info.author_id = users.id
+		WHERE users.login_name = ? AND video_info.create_time > FROM_UNIXTIME(?) AND video_info.create_time <= FROM_UNIXTIME(?) 
+		ORDER BY video_info.create_time DESC`)
+
+	var res []*defs.VideoInfo
+
+	if err != nil {
+		return res, err
+	}
+
+	rows, err := stmtOut.Query(uname, from, to)
+	if err != nil {
+		log.Printf("%s", err)
+		return res, err
+	}
+
+	for rows.Next() {
+		var id, name, ctime string
+		var aid int
+		if err := rows.Scan(&id, &aid, &name, &ctime); err != nil {
+			return res, err
+		}
+
+		vi := &defs.VideoInfo{Id: id, AuthorId: aid, Name: name, DisplayCtime: ctime}
+		res = append(res, vi)
+	}
+
+	defer stmtOut.Close()
 
 	return res, nil
 }

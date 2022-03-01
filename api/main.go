@@ -1,6 +1,7 @@
 package main
 
 import (
+	"MoStream/api/session"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
@@ -25,9 +26,25 @@ func (m middlewareHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 // RegisterHandlers init a router and return
 func RegisterHandlers() *httprouter.Router {
 	router := httprouter.New()
+
+	// login methods
 	router.POST("/user", CreateUser)
 	router.POST("/user/:user_name", Login)
+	router.GET("/user/:user_name", GetUserInfo)
+
+	// videos and comments
+	router.POST("/user/:user_name/videos", AddNewVideo)
+	router.GET("/user/:user_name/videos", ListAllVideos)
+	router.DELETE("/user/:user_name/videos/:vid-id", DeleteVideo)
+	router.POST("/videos/:vid-id/comments", PostComment)
+	router.GET("/videos/:vid-id/comments", ShowComments)
+
 	return router
+}
+
+// load session data from database
+func Prepare() {
+	session.LoadSessionFromDB()
 }
 
 func main() {
