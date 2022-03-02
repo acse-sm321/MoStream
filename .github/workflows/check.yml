@@ -15,5 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Run API test
-#        run:  go test -v ./api/dbops
-        run: gofmt -w .
+        run:
+        gofmt -w .
+        cd scheduler/taskrunner
+        go test -v .
