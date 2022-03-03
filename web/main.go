@@ -15,7 +15,9 @@ func RegisterHandler() *httprouter.Router {
 	// Proxy and transfer request
 	router.POST("/api", apiHandler)
 
-	router.POST("/upload/:vid-id", proxyHandler)
+	router.GET("/videos/:vid-id", proxyVideoHandler)
+
+	router.POST("/upload/:vid-id", proxyUploadHandler)
 
 	// file server
 	router.ServeFiles("/statics/*filepath", http.Dir("./templates"))

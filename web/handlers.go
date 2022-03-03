@@ -1,6 +1,7 @@
 package main
 
 import (
+	"MoStream/config"
 	"encoding/json"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
@@ -99,9 +100,15 @@ func apiHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	defer r.Body.Close()
 }
 
-func proxyHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	u, _ := url.Parse("http://127.0.0.1:9000/")    // should be in config
-	proxy := httputil.NewSingleHostReverseProxy(u) // replace the domain name, header has not been modified
+func proxyVideoHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	u, _ := url.Parse("http://" + config.GetLbAddr() + ":9000/")
+	proxy := httputil.NewSingleHostReverseProxy(u)
+	proxy.ServeHTTP(w, r)
+}
+
+func proxyUploadHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	u, _ := url.Parse("http://" + config.GetLbAddr() + ":9000/") // should be in config
+	proxy := httputil.NewSingleHostReverseProxy(u)               // replace the domain name, header has not been modified
 	proxy.ServeHTTP(w, r)
 }
 

@@ -7,25 +7,29 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 )
 
 func streamHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	vid := p.ByName("vid-id")
-	vl := VIDEO_DIR + vid // file name
+	//vid := p.ByName("vid-id")
+	//vl := VIDEO_DIR + vid // file name
+	//
+	//log.Printf("%scripts", vl)
+	//// open the video
+	//video, err := os.Open(vl)
+	//if err != nil {
+	//	log.Printf("Error opening file: %v", err)
+	//	sendErrorResponse(w, http.StatusInternalServerError, "Internal server error")
+	//	return
+	//}
+	//
+	//w.Header().Set("Content-Type", "video/mp4")
+	//http.ServeContent(w, r, "", time.Now(), video)
+	//defer video.Close()
 
-	log.Printf("%scripts", vl)
-	// open the video
-	video, err := os.Open(vl)
-	if err != nil {
-		log.Printf("Error opening file: %v", err)
-		sendErrorResponse(w, http.StatusInternalServerError, "Internal server error")
-		return
-	}
-
-	w.Header().Set("Content-Type", "video/mp4")
-	http.ServeContent(w, r, "", time.Now(), video)
-	defer video.Close()
+	log.Printf("Accessed streamHandler")
+	// access the oss from public, need aliyun oss SDK
+	targetUrl := "https://mostream-videos.oss-cn-shanghai.aliyuncs.com/videos/" + p.ByName("vid-id")
+	http.Redirect(w, r, targetUrl, 301)
 }
 
 // upload local files to server
@@ -54,6 +58,17 @@ func uploadHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 		return
 	}
 
+	// oss configuration
+	ossfn := "videos/" + filename
+	path := "./videos/" + filename
+	bn := "mostream-videos" // bucket name
+	ret := UploadToOss(ossfn, path, bn)
+	if !ret {
+		sendErrorResponse(w, http.StatusInternalServerError, "Internal server error")
+		return
+	}
+	os.Remove(path) // delete the file at local
+	// write to local
 	w.WriteHeader(http.StatusCreated)
 	io.WriteString(w, "Uploading successfully")
 }

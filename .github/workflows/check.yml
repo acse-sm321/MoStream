@@ -14,7 +14,3 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Go to task runner
-        run: cd scheduler/taskrunner
-      - name: Run Go test
-        run: go test -v .
