@@ -167,7 +167,7 @@ func DeleteVideo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		return
 	}
 
-	go utils.SendDeleteVideoRequest(vid)
+	go utils.SendDeleteVideoRequest(vid) //
 	sendNormalResponse(w, "", 204)
 }
 

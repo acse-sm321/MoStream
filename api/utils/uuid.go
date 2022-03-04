@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"MoStream/config"
 	"crypto/rand"
 	"fmt"
 	"io"
@@ -28,10 +29,9 @@ func GetCurrentTimestampSec() int {
 	return ts
 }
 
-// TODO: change the addr to what is defined in the config file
+// send deleting video request
 func SendDeleteVideoRequest(id string) {
-	//addr := config.GetLbAddr() + ":9001"
-	addr := "http://localhost:9001"
+	addr := config.GetLbAddr() + ":9001"
 	url := "http://" + addr + "/video-delete-record/" + id
 	_, err := http.Get(url)
 	if err != nil {
