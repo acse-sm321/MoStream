@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# build web UI
+# build web UI on local
 cd ~/GolandProjects/MoStream/web
 go install
 cp ~/GolandProjects/bin/web ~/GolandProjects/bin/MoStream_ui/web

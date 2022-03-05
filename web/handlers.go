@@ -28,7 +28,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	if err1 != nil || err2 != nil {
 		p := HomePage{
-			Name: "Shuheng Mo",
+			Name: cname.Name,
 		}
 
 		t, e := template.ParseFiles("./templates/home.html")
