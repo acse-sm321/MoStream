@@ -10,7 +10,7 @@ type middlewareHandler struct {
 	r *httprouter.Router
 }
 
-func NewMiddleHandler(r *httprouter.Router) http.Handler {
+func NewMiddleWareHandler(r *httprouter.Router) http.Handler {
 	m := middlewareHandler{}
 	m.r = r
 	return m
@@ -29,13 +29,13 @@ func RegisterHandlers() *httprouter.Router {
 
 	// login methods
 	router.POST("/user", CreateUser)
-	router.POST("/user/:user_name", Login)
-	router.GET("/user/:user_name", GetUserInfo)
+	router.POST("/user/:username", Login)
+	router.GET("/user/:username", GetUserInfo)
 
 	// videos and comments
-	router.POST("/user/:user_name/videos", AddNewVideo)
-	router.GET("/user/:user_name/videos", ListAllVideos)
-	router.DELETE("/user/:user_name/videos/:vid-id", DeleteVideo)
+	router.POST("/user/:username/videos", AddNewVideo)
+	router.GET("/user/:username/videos", ListAllVideos)
+	router.DELETE("/user/:username/videos/:vid-id", DeleteVideo)
 	router.POST("/videos/:vid-id/comments", PostComment)
 	router.GET("/videos/:vid-id/comments", ShowComments)
 
@@ -44,13 +44,13 @@ func RegisterHandlers() *httprouter.Router {
 
 // load session data from database
 func Prepare() {
-	session.LoadSessionFromDB()
+	session.LoadSessionsFromDB()
 }
 
 func main() {
 	r := RegisterHandlers()
-	mh := NewMiddleHandler(r)
-	http.ListenAndServe(":8080", mh)
+	mh := NewMiddleWareHandler(r)
+	http.ListenAndServe(":8000", mh) // apiserver runs on :8000
 }
 
 // listen->RegisterHandlers->handlers

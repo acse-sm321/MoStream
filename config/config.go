@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding/json"
+	"log"
 	"os"
 )
 
@@ -22,6 +23,7 @@ func init() {
 	err := decoder.Decode(configuration)
 	if err != nil {
 		// must panic
+		log.Printf("%v", err)
 		panic(err)
 	}
 }

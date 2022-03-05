@@ -104,7 +104,7 @@ func GetUserInfo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 func AddNewVideo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	if !ValidateUser(w, r) {
-		log.Printf("Unathorized user \n")
+		log.Printf("Unathorized user! \n")
 		return
 	}
 
