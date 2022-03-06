@@ -28,14 +28,13 @@ func request(b *ApiBody, w http.ResponseWriter, r *http.Request) {
 	u.Host = config.GetLbAddr() + ":" + u.Port()
 	newUrl := u.String()
 
-	// GET,POST,DELETE
 	switch b.Method {
 	case http.MethodGet:
 		req, _ := http.NewRequest("GET", newUrl, nil)
 		req.Header = r.Header
 		resp, err = httpClient.Do(req)
 		if err != nil {
-			log.Printf("%v", err)
+			log.Println(err)
 			return
 		}
 		normalResponse(w, resp)
@@ -44,22 +43,23 @@ func request(b *ApiBody, w http.ResponseWriter, r *http.Request) {
 		req.Header = r.Header
 		resp, err = httpClient.Do(req)
 		if err != nil {
-			log.Printf("%v", err)
+			log.Println(err)
 			return
 		}
 		normalResponse(w, resp)
 	case http.MethodDelete:
-		req, _ := http.NewRequest("Delete", newUrl, nil)
+		req, _ := http.NewRequest("DELETE", newUrl, nil)
 		req.Header = r.Header
 		resp, err = httpClient.Do(req)
 		if err != nil {
-			log.Printf("%v", err)
+			log.Println(err)
 			return
 		}
 		normalResponse(w, resp)
 	default:
 		w.WriteHeader(http.StatusBadRequest)
-		io.WriteString(w, "Bad API request")
+		io.WriteString(w, "Bad api request")
+		return
 	}
 }
 
