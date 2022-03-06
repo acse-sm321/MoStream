@@ -12,7 +12,7 @@ var (
 
 // Initilize tht database connection
 func init() {
-	dbConn, err = sql.Open("mysql", "root:19990429#@tcp(localhost:3306)/mostream?charset=utf8")
+	dbConn, err = sql.Open("mysql", "root:W134679852i#@tcp(localhost:3306)/mostream?charset=utf8")
 	if err != nil {
 		panic(err.Error())
 	}
