@@ -12,8 +12,8 @@ var AK string
 var SK string
 
 func init() {
-	AK = "" // key ID
-	SK = "" // key secret
+	AK = "" // fill in the access key ID
+	SK = "" // fill in the access key secret
 	EP = config.GetOssAddr()
 }
 

@@ -23,15 +23,17 @@ func init() {
 	err := decoder.Decode(configuration)
 	if err != nil {
 		// must panic
-		log.Printf("%v", err)
+		log.Printf("%s", err)
 		panic(err)
 	}
 }
 
+// get load balance address
 func GetLbAddr() string {
 	return configuration.LBAddr
 }
 
+// get OSS address
 func GetOssAddr() string {
 	return configuration.OssAddr
 }

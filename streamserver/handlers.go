@@ -26,7 +26,7 @@ func streamHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 	//http.ServeContent(w, r, "", time.Now(), video)
 	//defer video.Close()
 
-	log.Printf("Accessed streamHandler")
+	log.Printf("Entered streamHandler")
 	// access the oss from public, need aliyun oss SDK
 	targetUrl := "https://mostream-videos.oss-cn-shanghai.aliyuncs.com/videos/" + p.ByName("vid-id")
 	http.Redirect(w, r, targetUrl, 301)
@@ -36,39 +36,42 @@ func streamHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 func uploadHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	r.Body = http.MaxBytesReader(w, r.Body, MAX_UPLOAD_SIZE)
 	if err := r.ParseMultipartForm(MAX_UPLOAD_SIZE); err != nil {
-		sendErrorResponse(w, http.StatusBadRequest, "File cannot bigger than 500MB!")
+		sendErrorResponse(w, http.StatusBadRequest, "File is too big")
 		return
 	}
 
-	file, _, err := r.FormFile("file") // header omitted
+	file, _, err := r.FormFile("file")
 	if err != nil {
-		sendErrorResponse(w, http.StatusInternalServerError, "Internal server error")
+		log.Printf("Error when try to get file: %v", err)
+		sendErrorResponse(w, http.StatusInternalServerError, "Internal Error")
 		return
 	}
+
 	data, err := ioutil.ReadAll(file)
 	if err != nil {
 		log.Printf("Read file error: %v", err)
-		sendErrorResponse(w, http.StatusInternalServerError, "Internal server error")
+		sendErrorResponse(w, http.StatusInternalServerError, "Internal Error")
 	}
-	filename := p.ByName("vid-id")
-	err = ioutil.WriteFile(VIDEO_DIR+filename, data, 0666) // try not to use 777
+
+	fn := p.ByName("vid-id")
+	err = ioutil.WriteFile(VIDEO_DIR+fn, data, 0666)
 	if err != nil {
 		log.Printf("Write file error: %v", err)
-		sendErrorResponse(w, http.StatusInternalServerError, "Internal server error")
+		sendErrorResponse(w, http.StatusInternalServerError, "Internal Error")
 		return
 	}
 
-	// oss configuration
-	ossfn := "videos/" + filename
-	path := "./videos/" + filename
-	bn := "mostream-videos" // bucket name
+	ossfn := "videos/" + fn
+	path := "./videos/" + fn
+	bn := "avenssi-videos2"
 	ret := UploadToOss(ossfn, path, bn)
 	if !ret {
-		sendErrorResponse(w, http.StatusInternalServerError, "Internal server error")
+		sendErrorResponse(w, http.StatusInternalServerError, "Internal Error")
 		return
 	}
-	os.Remove(path) // delete the file at local
-	// write to local
+
+	os.Remove(path)
+
 	w.WriteHeader(http.StatusCreated)
-	io.WriteString(w, "Uploading successfully")
+	io.WriteString(w, "Uploaded successfully")
 }

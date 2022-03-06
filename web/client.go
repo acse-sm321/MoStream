@@ -27,6 +27,7 @@ func request(b *ApiBody, w http.ResponseWriter, r *http.Request) {
 	u, _ := url.Parse(b.Url)
 	u.Host = config.GetLbAddr() + ":" + u.Port()
 	newUrl := u.String()
+
 	// GET,POST,DELETE
 	switch b.Method {
 	case http.MethodGet:

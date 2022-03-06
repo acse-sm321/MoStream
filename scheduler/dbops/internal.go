@@ -1,6 +1,9 @@
 package dbops
 
-import "log"
+import (
+	_ "github.com/go-sql-driver/mysql"
+	"log"
+)
 
 func ReadVideoDeletionRecord(count int) ([]string, error) {
 	stmtOut, err := dbConn.Prepare("SELECT video_id FROM video_del_rec LIMIT")
@@ -24,6 +27,7 @@ func ReadVideoDeletionRecord(count int) ([]string, error) {
 		}
 		ids = append(ids, id)
 	}
+	defer stmtOut.Close()
 	return ids, nil
 }
 
@@ -39,6 +43,6 @@ func DelVideoDeletionRecord(vid string) error {
 		return err
 	}
 
-	stmDel.Close()
+	defer stmDel.Close()
 	return nil
 }

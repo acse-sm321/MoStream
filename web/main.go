@@ -7,8 +7,11 @@ import (
 
 func RegisterHandler() *httprouter.Router {
 	router := httprouter.New()
+	// web home page
 	router.GET("/", homeHandler)
 	router.POST("/", homeHandler)
+
+	// web user home page
 	router.GET("/userhome", userHomeHandler)
 	router.POST("/userhome", userHomeHandler)
 

@@ -12,7 +12,6 @@ import (
 // Database operations
 // if we open multiple conn here it might lead to close-wait issue
 
-// AddUserCredential Add new user credential to database
 func AddUserCredential(loginName string, pwd string) error {
 	stmtIns, err := dbConn.Prepare("INSERT INTO users (login_name, pwd) VALUES (?, ?)")
 	if err != nil {
@@ -47,7 +46,7 @@ func GetUserCredential(loginName string) (string, error) {
 }
 
 func DeleteUser(loginName string, pwd string) error {
-	stmtDel, err := dbConn.Prepare("DELETE FROM users WHERE login_name=? AND pwd=?")
+	stmtDel, err := dbConn.Prepare("DELETE FROm users WHERE login_name=? AND pwd=?")
 	if err != nil {
 		log.Printf("DeleteUser error: %s", err)
 		return err
@@ -232,3 +231,32 @@ func ListComments(vid string, from, to int) ([]*defs.Comment, error) {
 
 	return res, nil
 }
+
+// func ListComments(vid string, from, to int) ([]*defs.Comment, error) {
+// 	stmtOut, err := dbConn.Prepare(`SELECT comments.id, users.login_name, comments.content FROM comments
+// 		INNER JOIN users ON comments.author_id = users.id
+// 		WHERE comments.video_id = ? AND comments.time > FROM_UNIXTIME(?) AND comments.time <= FROM_UNIXTIME(?)
+// 		ORDER BY comments.time DESC`)
+
+// 	var res []*defs.Comment
+
+// 	rows, err := stmtOut.Query(vid, from, to)
+// 	if err != nil {
+// 		log.Printf("%s", err)
+// 		return res, err
+// 	}
+
+// 	for rows.Next() {
+// 		var id, name, content string
+// 		if err := rows.Scan(&id, &name, &content); err != nil {
+// 			return res, err
+// 		}
+
+// 		c := &defs.Comment{Id: id, VideoId: vid, Author: name, Content: content}
+// 		res = append(res, c)
+// 	}
+
+// 	defer stmtOut.Close()
+
+// 	return res, nil
+// }

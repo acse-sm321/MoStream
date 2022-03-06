@@ -28,9 +28,9 @@ func RegisterHandlers() *httprouter.Router {
 	router := httprouter.New()
 
 	// login methods
-	router.POST("/user", CreateUser)
-	router.POST("/user/:username", Login)
-	router.GET("/user/:username", GetUserInfo)
+	router.POST("/user", CreateUser)           // create new user with username
+	router.POST("/user/:username", Login)      // login with username
+	router.GET("/user/:username", GetUserInfo) // retrieve username
 
 	// videos and comments
 	router.POST("/user/:username/videos", AddNewVideo)
@@ -48,6 +48,7 @@ func Prepare() {
 }
 
 func main() {
+	Prepare()
 	r := RegisterHandlers()
 	mh := NewMiddleWareHandler(r)
 	http.ListenAndServe(":8000", mh) // apiserver runs on :8000

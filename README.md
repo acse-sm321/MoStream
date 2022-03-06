@@ -3,26 +3,26 @@
 A video stream website written by Go. View the videos and comment your idea right now!
 
 ## Access the website
-[MoStream](https://mostream.com)
+[MoStream](http://47.100.245.2:8080)
 - website address: https://www.
 
 ## Run & installation
 ```
 $ git clone
-$ cd
-$ go install
-$ cd
-$ ./main
-
-# open in browser http://localhost:9999/
+$ cd MoStream
+$ sh buildprod.sh
+$ sh deploy.sh
 ```
-Prerequisites:  Golang and dependencies in go.mod pre-installed. 
+Prerequisites:  
+- Golang and dependencies in go.mod pre-installed.
+- MySQL
+
 ## Updates & Troubleshooting
 ```
 # Update details
 
 # Trouble shooting
-1. build.sh file need to be modified on different environment.
+1. build.sh was used for local debugging.
 ```
 
 ## Contribute

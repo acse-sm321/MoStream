@@ -26,7 +26,7 @@ func validateUserSession(r *http.Request) bool {
 		return false
 	}
 
-	r.Header.Add(HEADER_FIELD_SESSION, uname)
+	r.Header.Add(HEADER_FIELD_UNAME, uname)
 	return true
 }
 
