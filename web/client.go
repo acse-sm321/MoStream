@@ -63,15 +63,15 @@ func request(b *ApiBody, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// transfer api requests as a proxy
 func normalResponse(w http.ResponseWriter, r *http.Response) {
 	res, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		re, _ := json.Marshal(ErrorInternalFaults)
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(500)
 		io.WriteString(w, string(re))
 		return
 	}
+
 	w.WriteHeader(r.StatusCode)
 	io.WriteString(w, string(res))
 }

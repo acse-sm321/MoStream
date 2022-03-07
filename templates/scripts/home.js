@@ -641,7 +641,7 @@ function listAllComments(vid, callback) {
          callback(null, "Error of Signin");
          return;
       }
-      callback(data, null);
-   });
+   });      callback(data, null);
+
 }
 

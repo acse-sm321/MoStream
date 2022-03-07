@@ -26,7 +26,7 @@ func streamHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 	//http.ServeContent(w, r, "", time.Now(), video)
 	//defer video.Close()
 
-	log.Printf("Entered streamHandler")
+	log.Println("Entered streamHandler")
 	// access the oss from public, need aliyun oss SDK
 	targetUrl := "http://mostream-videos.oss-cn-shanghai.aliyuncs.com/videos/" + p.ByName("vid-id")
 	http.Redirect(w, r, targetUrl, 301)

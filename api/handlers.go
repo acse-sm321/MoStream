@@ -12,7 +12,6 @@ import (
 	"net/http"
 )
 
-// CreateUser Handler create a new user
 func CreateUser(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	res, _ := ioutil.ReadAll(r.Body)
 	ubody := &defs.UserCredential{}
@@ -38,7 +37,11 @@ func CreateUser(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	}
 }
 
-// Login Handler for user login
+// func Login(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+// 	uname := p.ByName("user_name")
+// 	io.WriteString(w, uname)
+// }
+
 func Login(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	res, _ := ioutil.ReadAll(r.Body)
 	log.Printf("%s", res)
@@ -129,6 +132,7 @@ func AddNewVideo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	} else {
 		sendNormalResponse(w, string(resp), 201)
 	}
+
 }
 
 func ListAllVideos(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
@@ -166,7 +170,7 @@ func DeleteVideo(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		return
 	}
 
-	go utils.SendDeleteVideoRequest(vid) //
+	go utils.SendDeleteVideoRequest(vid)
 	sendNormalResponse(w, "", 204)
 }
 

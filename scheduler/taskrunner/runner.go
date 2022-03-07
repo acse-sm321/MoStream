@@ -8,9 +8,9 @@ type Runner struct {
 	Error      controlChan
 	Data       dataChan
 	dataSize   int
-	longlived  bool
+	longLived  bool
 	Dispatcher fn
-	Executer   fn
+	Executor   fn
 }
 
 func NewRunner(size int, longlived bool, d fn, e fn) *Runner {
@@ -18,23 +18,22 @@ func NewRunner(size int, longlived bool, d fn, e fn) *Runner {
 		Controller: make(chan string, 1),
 		Error:      make(chan string, 1),
 		Data:       make(chan interface{}, size),
-		longlived:  longlived,
+		longLived:  longlived,
 		dataSize:   size,
 		Dispatcher: d,
-		Executer:   e,
+		Executor:   e,
 	}
 }
 
 func (r *Runner) startDispatch() {
 	defer func() {
-		if !r.longlived {
+		if !r.longLived {
 			close(r.Controller)
 			close(r.Data)
 			close(r.Error)
 		}
-	}() // triggered immediately
+	}()
 
-	// non-blocking receive async
 	for {
 		select {
 		case c := <-r.Controller:
@@ -48,7 +47,7 @@ func (r *Runner) startDispatch() {
 			}
 
 			if c == READY_TO_EXECUTE {
-				err := r.Executer(r.Data)
+				err := r.Executor(r.Data)
 				if err != nil {
 					r.Error <- CLOSE
 				} else {

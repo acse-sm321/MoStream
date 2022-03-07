@@ -3,7 +3,6 @@ package main
 import (
 	"MoStream/api/defs"
 	"MoStream/api/session"
-	"log"
 	"net/http"
 )
 
@@ -16,6 +15,8 @@ import (
 var HEADER_FIELD_SESSION = "X-Session-Id"
 var HEADER_FIELD_UNAME = "X-User-Name"
 
+// Check if the current user has the permission
+// Use session id to do the check
 func validateUserSession(r *http.Request) bool {
 	sid := r.Header.Get(HEADER_FIELD_SESSION)
 	if len(sid) == 0 {
@@ -33,7 +34,6 @@ func validateUserSession(r *http.Request) bool {
 
 func ValidateUser(w http.ResponseWriter, r *http.Request) bool {
 	uname := r.Header.Get(HEADER_FIELD_UNAME)
-	log.Printf("%s", uname)
 	if len(uname) == 0 {
 		sendErrorResponse(w, defs.ErrorNotAuthUser)
 		return false

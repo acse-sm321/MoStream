@@ -15,9 +15,7 @@ func RegisterHandlers() *httprouter.Router {
 }
 
 func main() {
-	//c := make(chan int)
 	go taskrunner.Start()
 	r := RegisterHandlers()
-	//<- c
-	http.ListenAndServe(":9001", r) // this is blocking
+	http.ListenAndServe(":9001", r)
 }

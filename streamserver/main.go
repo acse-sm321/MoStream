@@ -7,7 +7,7 @@ import (
 
 type middleWareHandler struct {
 	r *httprouter.Router
-	l *ConnLimiter // flow control
+	l *ConnLimiter
 }
 
 func NewMiddleWareHandler(r *httprouter.Router, cc int) http.Handler {
@@ -15,6 +15,16 @@ func NewMiddleWareHandler(r *httprouter.Router, cc int) http.Handler {
 	m.r = r
 	m.l = NewConnLimiter(cc)
 	return m
+}
+
+func RegisterHandlers() *httprouter.Router {
+	router := httprouter.New()
+
+	router.GET("/videos/:vid-id", streamHandler)
+
+	router.POST("/upload/:vid-id", uploadHandler)
+
+	return router
 }
 
 func (m middleWareHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -27,22 +37,8 @@ func (m middleWareHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer m.l.ReleaseConn()
 }
 
-func RegisterHandlers() *httprouter.Router {
-	router := httprouter.New()
-
-	// get the video id
-	router.GET("/videos/:vid-id", streamHandler)
-
-	// upload with new id in handler
-	router.POST("/upload/:vid-id", uploadHandler)
-
-	return router
-}
-
-// handlers
-
 func main() {
 	r := RegisterHandlers()
-	mh := NewMiddleWareHandler(r, 2) // ... connections in total
+	mh := NewMiddleWareHandler(r, 2)
 	http.ListenAndServe(":9000", mh)
 }

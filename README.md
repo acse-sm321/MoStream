@@ -4,7 +4,7 @@ A video stream website written by Go. View the videos and comment your idea righ
 
 ## Access the website
 [MoStream](http://47.100.245.2:8080)
-- website address: https://www.
+- website address: https://www. (Looking for a perfect domain name ...)
 
 ## Run & installation
 ```
@@ -26,7 +26,7 @@ Prerequisites:
 ```
 
 ## Contribute
-Please fork and make pull requests. Issues and comments are welcomed. For any problem about copyright please contact me by [email](shuheng_mo_mail@163.com).
+Please fork and make pull requests. Issues and comments are welcomed. For any problem about copyright please contact me by `shuheng_mo_mail@163.com`.
 
 ##  Acknowledgements
 Adorable Gophers and my friends.

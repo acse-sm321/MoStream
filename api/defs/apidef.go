@@ -1,6 +1,5 @@
 package defs
 
-//reqeusts
 type UserCredential struct {
 	Username string `json:"user_name"`
 	Pwd      string `json:"pwd"`
@@ -16,7 +15,6 @@ type NewVideo struct {
 	Name     string `json:"name"`
 }
 
-//response
 type SignedUp struct {
 	Success   bool   `json:"success"`
 	SessionId string `json:"session_id"`
