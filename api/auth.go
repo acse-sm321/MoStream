@@ -3,6 +3,7 @@ package main
 import (
 	"MoStream/api/defs"
 	"MoStream/api/session"
+	"log"
 	"net/http"
 )
 
@@ -32,6 +33,7 @@ func validateUserSession(r *http.Request) bool {
 
 func ValidateUser(w http.ResponseWriter, r *http.Request) bool {
 	uname := r.Header.Get(HEADER_FIELD_UNAME)
+	log.Printf("%s", uname)
 	if len(uname) == 0 {
 		sendErrorResponse(w, defs.ErrorNotAuthUser)
 		return false

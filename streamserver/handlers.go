@@ -28,7 +28,7 @@ func streamHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 
 	log.Printf("Entered streamHandler")
 	// access the oss from public, need aliyun oss SDK
-	targetUrl := "https://mostream-videos.oss-cn-shanghai.aliyuncs.com/videos/" + p.ByName("vid-id")
+	targetUrl := "http://mostream-videos.oss-cn-shanghai.aliyuncs.com/videos/" + p.ByName("vid-id")
 	http.Redirect(w, r, targetUrl, 301)
 }
 
@@ -63,7 +63,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 
 	ossfn := "videos/" + fn
 	path := "./videos/" + fn
-	bn := "avenssi-videos2"
+	bn := "mostream-videos"
 	ret := UploadToOss(ossfn, path, bn)
 	if !ret {
 		sendErrorResponse(w, http.StatusInternalServerError, "Internal Error")
