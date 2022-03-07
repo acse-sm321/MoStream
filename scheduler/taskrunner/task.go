@@ -22,7 +22,7 @@ func deleteVideo(vid string) error {
 	//}
 
 	ossfn := "videos/" + vid
-	bn := "avenssi-videos2"
+	bn := "mostream-videos"
 	ok := ossops.DeleteObject(ossfn, bn)
 
 	if !ok {
